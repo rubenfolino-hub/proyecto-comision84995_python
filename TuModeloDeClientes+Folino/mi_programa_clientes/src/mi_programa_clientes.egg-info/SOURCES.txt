@@ -1,7 +1,0 @@
-setup.py
-src/mi_programa_clientes/__init__.py
-src/mi_programa_clientes/cliente.py
-src/mi_programa_clientes.egg-info/PKG-INFO
-src/mi_programa_clientes.egg-info/SOURCES.txt
-src/mi_programa_clientes.egg-info/dependency_links.txt
-src/mi_programa_clientes.egg-info/top_level.txt
