@@ -1,0 +1,19 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sistema Biblioteca</title>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'inicio' %}">Inicio</a> | 
+        <a href="{% url 'autor_form' %}">Cargar Autor</a> | 
+        <a href="{% url 'libro_form' %}">Cargar Libro</a> | 
+        <a href="{% url 'socio_form' %}">Cargar Socio</a> | 
+        <a href="{% url 'buscar_libro' %}">Buscar Libros</a>
+    </nav>
+    <hr>
+    {% block contenido %}
+    {% endblock %}
+</body>
+</html>

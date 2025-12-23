@@ -1,0 +1,10 @@
+
+{% extends "biblioteca/base.html" %}
+{% block contenido %}
+    <h2>Registrar Nuevo Libro</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ miFormulario.as_p }}
+        <button type="submit">Guardar Libro</button>
+    </form>
+{% endblock %}

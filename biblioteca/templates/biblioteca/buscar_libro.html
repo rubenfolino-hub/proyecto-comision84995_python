@@ -1,0 +1,21 @@
+
+{% extends "biblioteca/base.html" %}
+
+{% block contenido %}
+    <h2>Buscar Libro</h2>
+    <form method="GET">
+        <input type="text" name="titulo" placeholder="Ingresa el título...">
+        <button type="submit">Buscar</button>
+    </form>
+
+    {% if query %}
+        <h3>Resultados para: "{{ query }}"</h3>
+        <ul>
+            {% for libro in libros %}
+                <li>{{ libro.titulo }} - {{ libro.genero }}</li>
+            {% empty %}
+                <li>No se encontraron libros.</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
