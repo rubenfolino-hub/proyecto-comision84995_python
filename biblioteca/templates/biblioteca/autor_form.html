@@ -1,0 +1,11 @@
+
+{% extends "biblioteca/base.html" %}
+
+{% block contenido %}
+    <h2>Registrar Nuevo Autor</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ miFormulario.as_p }}
+        <button type="submit">Guardar Autor</button>
+    </form>
+{% endblock %}
