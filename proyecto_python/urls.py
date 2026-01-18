@@ -19,5 +19,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('biblioteca.urls')), # Conecta con las URLs de tu app
+    path('', include('biblioteca.urls')), # Este llama al archivo de abajo
 ]

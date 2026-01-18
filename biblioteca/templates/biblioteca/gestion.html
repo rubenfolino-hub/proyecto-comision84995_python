@@ -1,0 +1,36 @@
+
+
+{% extends "biblioteca/base.html" %}
+
+{% block contenido %}
+    <h2>Panel de Gestión (CRUD)</h2>
+    <p>Desde aquí puedes modificar o eliminar cualquier registro.</p>
+
+    <h3>Autores</h3>
+    <table border="1" width="100%">
+        <tr><th>Nombre</th><th>Acciones</th></tr>
+        {% for a in autores %}
+        <tr>
+            <td>{{ a.nombre }} {{ a.apellido }}</td>
+            <td>
+                <a href="{% url 'editar_autor' a.id %}">Editar</a> | 
+                <a href="{% url 'borrar_autor' a.id %}" style="color:red;">Borrar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h3>Libros</h3>
+    <table border="1" width="100%">
+        <tr><th>Título</th><th>Acciones</th></tr>
+        {% for l in libros %}
+        <tr>
+            <td>{{ l.titulo }}</td>
+            <td>
+                <a href="{% url 'editar_libro' l.id %}">Editar</a> | 
+                <a href="{% url 'borrar_libro' l.id %}" style="color:red;">Borrar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
