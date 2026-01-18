@@ -1,13 +1,26 @@
 
 from django.shortcuts import render, redirect
-from .models import Libro, Autor, Socio
-from .forms import AutorFormulario, LibroFormulario, SocioFormulario, BuscarLibroForm
+from .forms import AutorFormulario, LibroFormulario, SocioFormulario 
+from .models import Libro 
 
-# Vista de Inicio
+def home(request):
+    return render(request, 'home.html')
+
+def about(request):
+    usuario = {
+        "nombre": "Ruben",
+        "apellido": "Folino",
+        "email": "ruben@coderhouse.com",
+        "avatar": "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+        "biografia": "Estudiante de Python en Coderhouse",
+        "cumpleanios": "18 de febrero",
+    }
+    return render(request, 'about.html', {'usuario': usuario})
+
+
 def inicio(request):
     return render(request, 'biblioteca/inicio.html')
 
-# Vista para agregar Autores
 def agregar_autor(request):
     if request.method == "POST":
         form = AutorFormulario(request.POST)
@@ -18,7 +31,6 @@ def agregar_autor(request):
         form = AutorFormulario()
     return render(request, 'biblioteca/autor_form.html', {'miFormulario': form})
 
-# Vista para agregar Libros (Esta es la que te falta)
 def agregar_libro(request):
     if request.method == "POST":
         form = LibroFormulario(request.POST)
@@ -29,7 +41,6 @@ def agregar_libro(request):
         form = LibroFormulario()
     return render(request, 'biblioteca/libro_form.html', {'miFormulario': form})
 
-# Vista para agregar Socios (También necesaria)
 def agregar_socio(request):
     if request.method == "POST":
         form = SocioFormulario(request.POST)
@@ -40,12 +51,10 @@ def agregar_socio(request):
         form = SocioFormulario()
     return render(request, 'biblioteca/socio_form.html', {'miFormulario': form})
 
-# Vista de Búsqueda
 def buscar_libro(request):
     libros = []
     query = ""
     if request.GET.get('titulo'):
         query = request.GET['titulo']
         libros = Libro.objects.filter(titulo__icontains=query)
-    
     return render(request, 'biblioteca/buscar_libro.html', {'libros': libros, 'query': query})

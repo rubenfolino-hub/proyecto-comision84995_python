@@ -1,0 +1,25 @@
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil de Usuario</title>
+    <style>
+        .perfil-card { border: 1px solid #ccc; padding: 20px; width: 300px; border-radius: 10px; }
+        .avatar { width: 100px; border-radius: 50%; }
+    </style>
+</head>
+<body>
+    <nav><a href="/">Volver al Inicio</a></nav>
+    <hr>
+
+    <div class="perfil-card">
+        <h1>Perfil de {{ usuario.nombre }} {{ usuario.apellido }}</h1>
+        <img src="{{ usuario.avatar }}" alt="Avatar" class="avatar">
+        <p><strong>Biografía:</strong> {{ usuario.biografia }}</p>   
+        <p><strong>Email:</strong> {{ usuario.email }}</p>
+        <p><strong>Fecha de cumpleaños:</strong> {{ usuario.cumpleanios }}</p>
+    </div>
+</body>
+</html>
