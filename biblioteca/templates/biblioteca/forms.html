@@ -2,32 +2,12 @@
 
 from django import forms
 from django.contrib.auth.models import User
-from .models import Perfil, Autor, Libro, Socio 
-
-
-
-class AutorFormulario(forms.ModelForm):
-    class Meta:
-        model = Autor
-        fields = '__all__'
-
-class LibroFormulario(forms.ModelForm):
-    class Meta:
-        model = Libro
-        fields = '__all__'
-
-class SocioFormulario(forms.ModelForm):
-    class Meta:
-        model = Socio
-        fields = '__all__'
-
-# --- NUEVOS FORMULARIOS PARA EL PERFIL ---
+from .models import Perfil
 
 class UserEditForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
-        
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),

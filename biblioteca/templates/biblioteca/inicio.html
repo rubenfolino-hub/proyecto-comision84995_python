@@ -3,34 +3,48 @@
 {% extends "biblioteca/base.html" %}
 
 {% block contenido %}
-    <div style="text-align: center; margin-top: 50px;">
-        <h1>Bienvenido a la Gestión de la Biblioteca</h1>
-        <p style="font-size: 1.2em; color: #555;">Sistema de administración de Libros, Autores y Socios.</p>
-        
-        <hr style="width: 50%; margin: 30px auto;">
+<div class="text-center py-5">
+    <h1 class="display-4 fw-bold text-dark">Bienvenido a la Gestión de la Biblioteca</h1>
+    <p class="lead text-muted">Sistema de administración de Libros, Autores y Socios.</p>
+    
+    <hr class="my-5 w-50 mx-auto">
 
-        {% if user.is_authenticated %}
-            <div style="background-color: #e7f3fe; padding: 20px; border-radius: 10px; display: inline-block;">
-                <h3>¡Hola de nuevo, {{ user.username }}!</h3>
-                <p>Ya tienes acceso total. Puedes usar el menú superior para:</p>
-                <ul style="text-align: left; display: inline-block;">
-                    <li>Cargar nuevos registros.</li>
-                    <li>Modificar o eliminar datos existentes.</li>
-                    <li>Realizar búsquedas avanzadas.</li>
-                </ul>
+    {% if user.is_authenticated %}
+        <div class="card bg-light border-0 shadow-sm d-inline-block p-4" style="max-width: 600px;">
+            <div class="card-body">
+                <h3 class="text-primary mb-3">
+                    ¡Hola de nuevo, 
+                    {% if user.first_name %}
+                        {{ user.first_name|capfirst }}
+                    {% else %}
+                        {{ user.username }}
+                    {% endif %}! 📚
+                </h3>
+                <p class="text-secondary">Ya tienes acceso total al sistema. Desde el menú de <strong>Gestión</strong> puedes:</p>
+                <div class="text-start d-inline-block">
+                    <ul class="list-group list-group-flush bg-transparent">
+                        <li class="list-group-item bg-transparent border-0"><i class="bi bi-plus-circle-fill text-success me-2"></i> Cargar nuevos registros.</li>
+                        <li class="list-group-item bg-transparent border-0"><i class="bi bi-pencil-square text-warning me-2"></i> Modificar o eliminar datos existentes.</li>
+                        <li class="list-group-item bg-transparent border-0"><i class="bi bi-search text-info me-2"></i> Realizar búsquedas avanzadas.</li>
+                    </ul>
+                </div>
+                <div class="mt-4">
+                    <a href="{% url 'perfil' %}" class="btn btn-outline-primary btn-sm">Ver mi perfil</a>
+                </div>
             </div>
-        {% else %}
-            <div style="background-color: #fff3cd; padding: 20px; border-radius: 10px; border: 1px solid #ffeeba; display: inline-block;">
-                <p style="font-size: 1.1em; margin: 0;">
-                    <strong>Aviso:</strong> Para acceder a la gestión de la base de datos y realizar modificaciones, 
-                    por favor <a href="{% url 'login' %}" style="font-weight: bold; color: #856404;">inicia sesión</a>.
-                </p>
-            </div>
-        {% endif %}
-    </div>
+        </div>
+    {% else %}
+        <div class="alert alert-warning d-inline-block p-4 shadow-sm" role="alert">
+            <h4 class="alert-heading"><i class="bi bi-exclamation-triangle-fill me-2"></i>Aviso</h4>
+            <p class="mb-0">
+                Para acceder a la gestión de la base de datos y realizar modificaciones, 
+                por favor <a href="{% url 'login' %}" class="alert-link">inicia sesión</a>.
+            </p>
+        </div>
+    {% endif %}
+</div>
 
-    <div style="margin-top: 40px; color: #888; font-size: 0.9em; text-align: center;">
-        <p>Trabajo Práctico - Curso de Python & Django - Coderhouse</p>
-    </div>
+<div class="mt-5 text-muted small text-center pt-4 border-top">
+    <p>Trabajo Práctico - Curso de Python & Django - Coderhouse</p>
+</div>
 {% endblock %}
-

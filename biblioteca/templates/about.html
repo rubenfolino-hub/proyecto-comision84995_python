@@ -1,25 +1,76 @@
 
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Perfil de Usuario</title>
-    <style>
-        .perfil-card { border: 1px solid #ccc; padding: 20px; width: 300px; border-radius: 10px; }
-        .avatar { width: 100px; border-radius: 50%; }
-    </style>
-</head>
-<body>
-    <nav><a href="/">Volver al Inicio</a></nav>
-    <hr>
+{% extends "biblioteca/base.html" %}
 
-    <div class="perfil-card">
-        <h1>Perfil de {{ usuario.nombre }} {{ usuario.apellido }}</h1>
-        <img src="{{ usuario.avatar }}" alt="Avatar" class="avatar">
-        <p><strong>Biografía:</strong> {{ usuario.biografia }}</p>   
-        <p><strong>Email:</strong> {{ usuario.email }}</p>
-        <p><strong>Fecha de cumpleaños:</strong> {{ usuario.cumpleanios }}</p>
+{% block contenido %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-lg overflow-hidden">
+                <div class="row g-0">
+                    
+                    <div class="col-md-4 bg-dark d-flex align-items-center justify-content-center p-4">
+                        <div class="text-center text-white">
+                            <img src="{{ usuario.avatar }}" 
+                                 alt="Avatar de {{ usuario.nombre }}" 
+                                 class="rounded-circle img-thumbnail mb-3" 
+                                 style="width: 160px; height: 160px; object-fit: cover; border-width: 4px;">
+                            <h3 class="h4 mb-1">{{ usuario.nombre }} {{ usuario.apellido }}</h3>
+                            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold">Estudiante Coderhouse</span>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-8">
+                        <div class="card-body p-4 p-md-5">
+                            <h2 class="fw-bold mb-4 text-dark border-bottom pb-2">Sobre mí</h2>
+                            
+                            <p class="lead text-secondary mb-4">
+                                {{ usuario.biografia }}
+                            </p>
+                            
+                            <div class="row mt-4">
+                                <div class="col-sm-6 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-envelope-at text-primary fs-3 me-3"></i>
+                                        <div>
+                                            <small class="text-muted d-block">Email</small>
+                                            <span class="fw-bold text-break">{{ usuario.email }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-calendar-check text-primary fs-3 me-3"></i>
+                                        <div>
+                                            <small class="text-muted d-block">Cumpleaños</small>
+                                            <span class="fw-bold">{{ usuario.cumpleanios }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <h5 class="text-uppercase text-muted mb-3 small fw-bold">Tecnologías Utilizadas</h5>
+                            <div class="d-flex flex-wrap gap-2">
+                                <span class="badge bg-light text-success border border-success px-3 py-2">Django 5.1 LTS</span>
+                                <span class="badge bg-light text-primary border border-primary px-3 py-2">Python 3.x</span>
+                                <span class="badge bg-light text-primary border border-primary px-3 py-2">SQLite 3</span>
+                                <span class="badge bg-light text-primary border border-primary px-3 py-2">Bootstrap 5.3</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="{% url 'inicio' %}" class="btn btn-dark btn-sm rounded-pill px-4 shadow-sm">
+                    <i class="bi bi-arrow-left me-2"></i>Volver al Inicio
+                </a>
+            </div>
+
+        </div>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}
