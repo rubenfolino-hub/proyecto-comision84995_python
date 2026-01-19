@@ -3,48 +3,93 @@
 {% extends "biblioteca/base.html" %}
 
 {% block contenido %}
-<div class="text-center py-5">
-    <h1 class="display-4 fw-bold text-dark">Bienvenido a la Gestión de la Biblioteca</h1>
-    <p class="lead text-muted">Sistema de administración de Libros, Autores y Socios.</p>
-    
-    <hr class="my-5 w-50 mx-auto">
+<div class="container mt-5">
+    <div class="p-5 mb-5 rounded-3 shadow-lg" 
+         style="background-color: #e7f1ff; border: 2px solid #0d6efd !important;">
+        
+        <div class="container-fluid py-2 text-center">
+            <h1 class="display-4 fw-bold" style="color: #084298;">
+                <i class="bi bi-book-half me-2"></i>Bienvenido a la Gestión de la Biblioteca
+            </h1>
+            <p class="lead text-dark fw-semibold">Sistema profesional de administración de Libros, Autores y Socios.</p>
+            
+            <hr class="my-4 w-50 mx-auto" style="border-top: 2px solid #0d6efd; opacity: 0.3;">
 
-    {% if user.is_authenticated %}
-        <div class="card bg-light border-0 shadow-sm d-inline-block p-4" style="max-width: 600px;">
-            <div class="card-body">
-                <h3 class="text-primary mb-3">
-                    ¡Hola de nuevo, 
-                    {% if user.first_name %}
-                        {{ user.first_name|capfirst }}
-                    {% else %}
-                        {{ user.username }}
-                    {% endif %}! 📚
-                </h3>
-                <p class="text-secondary">Ya tienes acceso total al sistema. Desde el menú de <strong>Gestión</strong> puedes:</p>
-                <div class="text-start d-inline-block">
-                    <ul class="list-group list-group-flush bg-transparent">
-                        <li class="list-group-item bg-transparent border-0"><i class="bi bi-plus-circle-fill text-success me-2"></i> Cargar nuevos registros.</li>
-                        <li class="list-group-item bg-transparent border-0"><i class="bi bi-pencil-square text-warning me-2"></i> Modificar o eliminar datos existentes.</li>
-                        <li class="list-group-item bg-transparent border-0"><i class="bi bi-search text-info me-2"></i> Realizar búsquedas avanzadas.</li>
-                    </ul>
+            {% if user.is_authenticated %}
+                <div class="py-2">
+                    <h3 class="mb-3" style="color: #052c65;">
+                        ¡Hola de nuevo, 
+                        {% if user.first_name %}
+                            {{ user.first_name|capfirst }}
+                        {% else %}
+                            {{ user.username }}
+                        {% endif %}! 📚
+                    </h3>
+                    <p class="text-secondary mb-4">Ya tienes acceso total al sistema. Selecciona una acción:</p>
+                    
+                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center mb-4">
+                        <a href="{% url 'gestion' %}" class="btn btn-primary btn-lg px-5 shadow">
+                            <i class="bi bi-gear-wide-connected me-2"></i> Panel de Gestión
+                        </a>
+                        <a href="{% url 'perfil' %}" class="btn btn-outline-primary btn-lg px-5 shadow-sm">
+                            <i class="bi bi-person-circle me-2"></i> Ver mi Perfil
+                        </a>
+                    </div>
                 </div>
-                <div class="mt-4">
-                    <a href="{% url 'perfil' %}" class="btn btn-outline-primary btn-sm">Ver mi perfil</a>
+            {% else %}
+                <div class="alert alert-warning d-inline-block p-4 shadow-sm border-2" role="alert">
+                    <h4 class="alert-heading"><i class="bi bi-exclamation-triangle-fill me-2"></i>Aviso</h4>
+                    <p class="mb-0">
+                        Para acceder a la gestión de la biblioteca, 
+                        por favor <a href="{% url 'login' %}" class="alert-link">inicia sesión</a>.
+                    </p>
                 </div>
-            </div>
+            {% endif %}
         </div>
-    {% else %}
-        <div class="alert alert-warning d-inline-block p-4 shadow-sm" role="alert">
-            <h4 class="alert-heading"><i class="bi bi-exclamation-triangle-fill me-2"></i>Aviso</h4>
-            <p class="mb-0">
-                Para acceder a la gestión de la base de datos y realizar modificaciones, 
-                por favor <a href="{% url 'login' %}" class="alert-link">inicia sesión</a>.
-            </p>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12 text-center mb-4">
+            <h2 class="text-secondary">Explorar Libros</h2>
         </div>
-    {% endif %}
+        
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for libro in libros %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm border-0">
+                        {% if libro.portada %}
+                            <img src="{{ libro.portada.url }}" class="card-img-top" alt="{{ libro.titulo }}" style="height: 300px; object-fit: cover;">
+                        {% else %}
+                            <div class="bg-light text-center py-5">
+                                <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
+                            </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ libro.titulo }}</h5>
+                            <p class="card-text text-muted">{{ libro.descripcion|truncatechars:100 }}</p>
+                        </div>
+                        <div class="card-footer bg-white border-0 text-center pb-3">
+                            <a href="{% url 'libro_detalle' libro.id %}" class="btn btn-sm btn-outline-info">Ver detalle</a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-info text-center shadow-sm py-5">
+                        <i class="bi bi-info-circle-fill display-4 mb-3 d-block"></i>
+                        <h4>Actualmente no hay libros registrados en el sistema.</h4>
+                        <p>Los libros que se agreguen desde el Panel de Gestión aparecerán aquí.</p>
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'libro_form' %}" class="btn btn-primary mt-2">Cargar el primer libro</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 
-<div class="mt-5 text-muted small text-center pt-4 border-top">
-    <p>Trabajo Práctico - Curso de Python & Django - Coderhouse</p>
+<div class="mt-5 text-muted small text-center py-4 border-top">
+    <p>Trabajo Práctico Final - Curso de Python comisión 84995 - Coderhouse</p>
 </div>
 {% endblock %}

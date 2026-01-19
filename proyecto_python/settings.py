@@ -22,7 +22,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'biblioteca', # Tu aplicación
+    
+    # Apps del Proyecto
+    'biblioteca',
+    'accounts',  
 ]
 
 MIDDLEWARE = [
@@ -40,14 +43,15 @@ ROOT_URLCONF = 'proyecto_python.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'], # Simplificado para mejor alcance
+        'DIRS': [BASE_DIR / 'templates'], 
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.media', # AGREGADO para las fotos
+                'django.template.context_processors.media', # Necesario para mostrar fotos en templates
             ],
         },
     },
@@ -63,23 +67,31 @@ DATABASES = {
     }
 }
 
+# Password validation (Agregado para cumplir con estándares de seguridad)
+AUTH_PASSWORD_VALIDATORS = [
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
+]
+
 # Internationalization
-LANGUAGE_CODE = 'es-ar' # Cambiado a Español (Argentina)
-TIME_ZONE = 'America/Argentina/Buenos_Aires' # Cambiado a tu zona horaria
+LANGUAGE_CODE = 'es-ar' 
+TIME_ZONE = 'America/Argentina/Buenos_Aires'
 USE_I18N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / 'static'] # Por si decides poner imágenes globales aquí
 
 # --- CONFIGURACIÓN DE ARCHIVOS MULTIMEDIA (FOTOS) ---
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Configuración de Login/Logout
+# --- REDIRECCIONES DE AUTENTICACIÓN ---
 LOGIN_REDIRECT_URL = 'inicio'
 LOGOUT_REDIRECT_URL = 'inicio'
 LOGIN_URL = 'login'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-

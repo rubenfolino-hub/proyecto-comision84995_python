@@ -5,21 +5,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Biblioteca</title>
+    <title>Sistema Biblioteca | Ruben Folino</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
-        body { background-color: #f8f9fa; }
+        body { background-color: #f8f9fa; min-height: 100vh; }
         .navbar { margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .main-container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
+        .main-container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.05); margin-bottom: 50px; }
         .nav-profile-img { width: 32px; height: 32px; object-fit: cover; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); }
+        footer { margin-top: auto; }
+        /* Estilo para que el badge de "Gestión" resalte */
+        .nav-link.text-warning:hover { color: #ffca2c !important; }
     </style>
 </head>
-<body>
+<body class="d-flex flex-column">
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'inicio' %}">📚 Biblioteca</a>
+            <a class="navbar-brand fw-bold" href="{% url 'inicio' %}">📚 Biblioteca</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -39,14 +42,14 @@
                     {% if user.is_authenticated %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-warning" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">
-                                Gestión
+                                <i class="bi bi-gear-fill me-1"></i> Gestión
                             </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{% url 'gestion' %}">Administrar Base de Datos</a></li>
+                            <ul class="dropdown-menu shadow">
+                                <li><a class="dropdown-item fw-bold" href="{% url 'gestion' %}">Administrar Todo</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{% url 'autor_form' %}">Cargar Autor</a></li>
-                                <li><a class="dropdown-item" href="{% url 'libro_form' %}">Cargar Libro</a></li>
-                                <li><a class="dropdown-item" href="{% url 'socio_form' %}">Cargar Socio</a></li>
+                                <li><a class="dropdown-item" href="{% url 'autor_form' %}"><i class="bi bi-person-badge me-2"></i>Cargar Autor</a></li>
+                                <li><a class="dropdown-item" href="{% url 'libro_form' %}"><i class="bi bi-book me-2"></i>Cargar Libro</a></li>
+                                <li><a class="dropdown-item" href="{% url 'socio_form' %}"><i class="bi bi-person-plus me-2"></i>Cargar Socio</a></li>
                             </ul>
                         </li>
                     {% endif %}
@@ -70,12 +73,22 @@
                                     {% endif %}
                                 </strong>!</span>
                             </a>
+                            
+                            {% if user.is_superuser %}
+                                <a href="{% url 'admin:index' %}" class="ms-3 text-info" title="Panel de Administración Django" target="_blank">
+                                    <i class="bi bi-shield-lock-fill"></i>
+                                </a>
+                            {% endif %}
                         </div>
+                        
                         <form action="{% url 'logout' %}" method="POST" class="m-0">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-outline-danger btn-sm">Cerrar Sesión</button>
+                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                <i class="bi bi-box-arrow-right"></i> Salir
+                            </button>
                         </form>
                     {% else %}
+                        <a href="{% url 'register' %}" class="btn btn-outline-light btn-sm me-2">Registrarse</a>
                         <a href="{% url 'login' %}" class="btn btn-outline-primary btn-sm">Iniciar Sesión</a>
                     {% endif %}
                 </div>
@@ -87,8 +100,8 @@
         {% if messages %}
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <i class="bi bi-info-circle me-2"></i>{{ message }}
+                    <button type="button" class="btn-close" data-bs-alert="alert" data-bs-dismiss="alert"></button>
                 </div>
             {% endfor %}
         {% endif %}
@@ -97,7 +110,12 @@
         {% endblock %}
     </div>
 
+    <footer class="bg-dark text-white text-center py-3">
+        <div class="container">
+            <small>&copy; 2026 Sistema de Gestión Bibliotecaria - Ruben Folino</small>
+        </div>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

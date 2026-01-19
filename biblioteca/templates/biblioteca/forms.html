@@ -2,7 +2,9 @@
 
 from django import forms
 from django.contrib.auth.models import User
-from .models import Perfil
+from .models import Perfil, Autor, Libro, Socio
+
+# --- Formularios de Perfil y Usuario ---
 
 class UserEditForm(forms.ModelForm):
     class Meta:
@@ -21,6 +23,41 @@ class PerfilEditForm(forms.ModelForm):
         widgets = {
             'direccion': forms.TextInput(attrs={'class': 'form-control'}),
             'pais': forms.TextInput(attrs={'class': 'form-control'}),
+            'foto': forms.FileInput(attrs={'class': 'form-control'}),
+        }
+
+# --- Formularios del Sistema de Biblioteca ---
+
+class AutorFormulario(forms.ModelForm):
+    class Meta:
+        model = Autor
+        fields = ['nombre', 'apellido', 'nacionalidad']
+        widgets = {
+            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
+            'apellido': forms.TextInput(attrs={'class': 'form-control'}),
+            'nacionalidad': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+class LibroFormulario(forms.ModelForm):
+    class Meta:
+        model = Libro
+        fields = ['titulo', 'fecha_publicacion', 'genero']
+        widgets = {
+            'titulo': forms.TextInput(attrs={'class': 'form-control'}),
+            'fecha_publicacion': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'genero': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+class SocioFormulario(forms.ModelForm):
+    class Meta:
+        model = Socio
+        # IMPORTANTE: Aquí incluimos 'dni' y 'foto' para cumplir el requisito
+        fields = ['nombre', 'apellido', 'dni', 'email', 'foto']
+        widgets = {
+            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
+            'apellido': forms.TextInput(attrs={'class': 'form-control'}),
+            'dni': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'DNI sin puntos'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'foto': forms.FileInput(attrs={'class': 'form-control'}),
         }
 

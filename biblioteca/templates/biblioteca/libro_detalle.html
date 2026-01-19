@@ -1,0 +1,36 @@
+
+
+{% extends "biblioteca/base.html" %}
+
+{% block contenido %}
+<div class="container mt-5">
+    <div class="card shadow border-0 mx-auto" style="max-width: 800px;">
+        <div class="row g-0">
+            <div class="col-md-4 bg-light text-center p-4 d-flex align-items-center justify-content-center">
+                {% if object.portada %}
+                    <img src="{{ object.portada.url }}" class="img-fluid rounded shadow-sm" alt="{{ object.titulo }}">
+                {% else %}
+                    <i class="bi bi-book text-secondary" style="font-size: 100px;"></i>
+                {% endif %}
+            </div>
+            <div class="col-md-8">
+                <div class="card-body p-4 text-center"> <h2 class="card-title fw-bold text-primary">{{ object.titulo }}</h2>
+                    <p class="text-muted small mb-3">ID de Inventario: {{ object.codigo_inventario }}</p>
+                    <hr>
+                    <div class="text-start d-inline-block w-100 px-3">
+                        <p><strong>Autor:</strong> {{ object.autor_nombre }}</p>
+                        <p><strong>Género:</strong> {{ object.genero }}</p>
+                        <p><strong>Fecha de Publicación:</strong> {{ object.fecha_publicacion|date:"d/m/Y" }}</p>
+                    </div>
+                    
+                    <div class="mt-4 border-top pt-3">
+                        <a href="{% url 'gestion' %}" class="btn btn-dark px-4 shadow-sm">
+                            <i class="bi bi-arrow-left-circle me-2"></i> Volver al Panel de Gestión
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

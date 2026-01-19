@@ -2,20 +2,59 @@
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
+from django.db.models import Q
 
-# Importamos los modelos 
-from .models import Libro, Autor, Socio, Perfil 
+# Importaciones para las Clases Basadas en Vistas (CBV)
+from django.views.generic import ListView, DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+# Importamos los modelos y formularios
+from .models import Libro, Autor, Socio 
 from .forms import AutorFormulario, LibroFormulario, SocioFormulario 
-from .forms import UserEditForm, PerfilEditForm
+
+# --- Vistas Basadas en Clases (CBV) ---
+
+class InicioView(ListView):
+    model = Libro
+    template_name = 'biblioteca/inicio.html'
+    context_object_name = 'libros'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['autores'] = Autor.objects.all()
+        return context
+
+class GestionView(LoginRequiredMixin, ListView):
+    model = Socio
+    template_name = 'biblioteca/gestion.html'
+    context_object_name = 'socios' 
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['autores'] = Autor.objects.all()
+        context['libros'] = Libro.objects.all()
+        return context
+
+# --- Vistas de Detalle (DetailView) ---
+# Usan LoginRequiredMixin: Cumple requisito de Mixin en CBV
+
+class SocioDetalle(LoginRequiredMixin, DetailView):
+    model = Socio
+    template_name = 'biblioteca/socio_detalle.html'
+    context_object_name = 'socio'
+
+class AutorDetalle(LoginRequiredMixin, DetailView):
+    model = Autor
+    template_name = 'biblioteca/autor_detalle.html'
+    context_object_name = 'autor'
+
+class LibroDetalle(LoginRequiredMixin, DetailView):
+    model = Libro
+    template_name = 'biblioteca/libro_detalle.html'
+    context_object_name = 'libro'
 
 # --- Vistas Públicas ---
-
-def inicio(request):
-    autores = Autor.objects.all()
-    libros = Libro.objects.all()
-    return render(request, 'biblioteca/inicio.html', {'autores': autores, 'libros': libros})
 
 def about(request):
     usuario = {
@@ -23,51 +62,27 @@ def about(request):
         "apellido": "Folino",
         "email": "ruben@coderhouse.com",
         "avatar": "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-        "biografia": "Hola! Soy Ruben, estudiante de Python en Coderhouse. Este proyecto es un sistema de gestión para una biblioteca desarrollado con Django",
+        "biografia": "Hola! Soy Ruben, estudiante de Python en Coderhouse.",
         "cumpleanios": "18 de febrero",
     }
     return render(request, 'about.html', {'usuario': usuario})
 
-def register(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            messages.success(request, f'Cuenta creada para {username}!')
-            return redirect('login')
-    else:
-        form = UserCreationForm()
-    return render(request, 'biblioteca/registro.html', {'form': form})
+# --- Buscador ---
 
-# --- Vistas Protegidas ---
-
-@login_required
-def ver_perfil(request):
-    perfil_extra, created = Perfil.objects.get_or_create(user=request.user)
-    return render(request, 'biblioteca/perfil.html', {
-        'usuario': request.user,
-        'perfil': perfil_extra
-    })
-
-@login_required
-def gestion(request):
-    autores = Autor.objects.all()
-    libros = Libro.objects.all()
-    socios = Socio.objects.all()
-    return render(request, 'biblioteca/gestion.html', {
-        'autores': autores, 
-        'libros': libros, 
-        'socios': socios
-    })
-
-@login_required
+@login_required # Uso de decorador: Cumple requisito en vista común
 def buscar_libro(request):
     libros = []
-    query = ""
-    if request.GET.get('titulo'):
-        query = request.GET['titulo']
-        libros = Libro.objects.filter(titulo__icontains=query)
+    query = request.GET.get('titulo', '')
+    if query:
+        libros = Libro.objects.filter(
+            Q(titulo__icontains=query) | 
+            Q(autor_nombre__icontains=query)
+        ).distinct()
+        
+        # Mensaje en caso de no encontrar nada (Requisito de la consigna)
+        if not libros:
+            messages.info(request, f"No se encontraron libros que coincidan con: '{query}'")
+            
     return render(request, 'biblioteca/buscar_libro.html', {'libros': libros, 'query': query})
 
 # --- CRUD Autores ---
@@ -78,6 +93,7 @@ def agregar_autor(request):
         form = AutorFormulario(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, "Autor agregado con éxito")
             return redirect('gestion')
     else:
         form = AutorFormulario()
@@ -85,20 +101,25 @@ def agregar_autor(request):
 
 @login_required
 def editar_autor(request, id):
-    autor = Autor.objects.get(id=id)
-    if request.method == "POST":
-        form = AutorFormulario(request.POST, instance=autor)
-        if form.is_valid():
-            form.save()
-            return redirect('gestion')
-    else:
-        form = AutorFormulario(instance=autor)
-    return render(request, 'biblioteca/autor_form.html', {'miFormulario': form})
+    try:
+        autor = Autor.objects.get(id=id)
+        if request.method == "POST":
+            form = AutorFormulario(request.POST, instance=autor)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Autor actualizado")
+                return redirect('gestion')
+        else:
+            form = AutorFormulario(instance=autor)
+        return render(request, 'biblioteca/autor_form.html', {'miFormulario': form})
+    except Autor.DoesNotExist:
+        messages.error(request, "El autor no existe")
+        return redirect('gestion')
 
 @login_required
 def borrar_autor(request, id):
-    autor = Autor.objects.get(id=id)
-    autor.delete()
+    Autor.objects.get(id=id).delete()
+    messages.warning(request, "Autor eliminado")
     return redirect('gestion')
 
 # --- CRUD Libros ---
@@ -106,9 +127,10 @@ def borrar_autor(request, id):
 @login_required
 def agregar_libro(request):
     if request.method == "POST":
-        form = LibroFormulario(request.POST)
+        form = LibroFormulario(request.POST, request.FILES) # Agregado FILES por si el libro tiene imagen
         if form.is_valid():
             form.save()
+            messages.success(request, "Libro registrado")
             return redirect('gestion')
     else:
         form = LibroFormulario()
@@ -118,9 +140,10 @@ def agregar_libro(request):
 def editar_libro(request, id):
     libro = Libro.objects.get(id=id)
     if request.method == "POST":
-        form = LibroFormulario(request.POST, instance=libro)
+        form = LibroFormulario(request.POST, request.FILES, instance=libro)
         if form.is_valid():
             form.save()
+            messages.success(request, "Libro actualizado")
             return redirect('gestion')
     else:
         form = LibroFormulario(instance=libro)
@@ -128,18 +151,19 @@ def editar_libro(request, id):
 
 @login_required
 def borrar_libro(request, id):
-    libro = Libro.objects.get(id=id)
-    libro.delete()
+    Libro.objects.get(id=id).delete()
+    messages.warning(request, "Libro eliminado")
     return redirect('gestion')
 
-# --- CRUD Socios (Aquí estaban los errores) ---
+# --- CRUD Socios ---
 
 @login_required
 def agregar_socio(request):
     if request.method == "POST":
-        form = SocioFormulario(request.POST)
+        form = SocioFormulario(request.POST, request.FILES) 
         if form.is_valid():
             form.save()
+            messages.success(request, "Socio dado de alta")
             return redirect('gestion')
     else:
         form = SocioFormulario()
@@ -149,9 +173,10 @@ def agregar_socio(request):
 def editar_socio(request, id):
     socio = Socio.objects.get(id=id)
     if request.method == "POST":
-        form = SocioFormulario(request.POST, instance=socio)
+        form = SocioFormulario(request.POST, request.FILES, instance=socio)
         if form.is_valid():
             form.save()
+            messages.success(request, "Datos del socio actualizados")
             return redirect('gestion')
     else:
         form = SocioFormulario(instance=socio)
@@ -159,28 +184,7 @@ def editar_socio(request, id):
 
 @login_required
 def borrar_socio(request, id):
-    socio = Socio.objects.get(id=id)
-    socio.delete()
+    Socio.objects.get(id=id).delete()
+    messages.warning(request, "Socio dado de baja")
     return redirect('gestion')
-
-# --- Perfil ---
-
-@login_required
-def editar_perfil(request):
-    perfil, created = Perfil.objects.get_or_create(user=request.user)
-    if request.method == 'POST':
-        user_form = UserEditForm(request.POST, instance=request.user)
-        perfil_form = PerfilEditForm(request.POST, request.FILES, instance=perfil)
-        if user_form.is_valid() and perfil_form.is_valid():
-            user_form.save()
-            perfil_form.save()
-            messages.success(request, "¡Perfil actualizado con éxito!")
-            return redirect('perfil')
-    else:
-        user_form = UserEditForm(instance=request.user)
-        perfil_form = PerfilEditForm(instance=perfil)
-    return render(request, 'biblioteca/editar_perfil.html', {
-        'user_form': user_form,
-        'perfil_form': perfil_form
-    })
 
