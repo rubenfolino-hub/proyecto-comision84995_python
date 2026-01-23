@@ -2,41 +2,46 @@
 
 # 📚 Sistema de Gestión - Biblioteca "CoderHouse"
 
-Este proyecto es la **Entrega Final** para el curso de Python en CoderHouse. Consiste en una aplicación web desarrollada con **Django** que permite gestionar un catálogo de libros, autores y socios, incluyendo un sistema completo de autenticación de usuarios.
+Este proyecto es la **Entrega Final** para el curso de Python en CoderHouse. Consiste en una aplicación web desarrollada con **Django** que permite gestionar un catálogo de libros, autores y socios, incluyendo un sistema completo de autenticación de usuarios y una interfaz moderna.
 
 ## 👤 Autor
-* **Nombre:** Ruben [Tu Apellido]
-* **Comisión:** [Tu Número de Comisión]
+* **Nombre:** Ruben Folino
+* **Comisión:** 89445
 
 ---
 
 ## 🚀 Funcionalidades Principales
 
 ### 📖 Gestión de Biblioteca (CRUD)
-* **Libros:** Creación, edición, eliminación y visualización detallada. Cada libro cuenta con título, autor, género, fecha de publicación, una imagen de portada y un **Código de Inventario único**.
-* **Autores y Socios:** Registros complementarios para una gestión integral de la biblioteca.
-* **Buscador:** Filtro inteligente de libros por título con avisos en caso de no encontrar resultados.
+* **Gestión Integral:** Creación, edición, eliminación y visualización detallada de Libros, Autores y Socios.
+* **Buscador Inteligente:** Sistema de búsqueda dinámica que muestra el catálogo completo por defecto y filtra por título en tiempo real.
+* **Interfaz Personalizada:** Diseño con estética de biblioteca, fondos dinámicos y efectos de "Glassmorphism" para una mejor experiencia de usuario (UX).
 
 ### 🔐 Sistema de Usuarios (Accounts)
-* **Registro e Inicio de Sesión:** Sistema seguro de autenticación.
-* **Perfiles Personalizados:** Cada usuario puede subir su avatar, editar su información (nombre, email, dirección, país) y realizar el **cambio de contraseña** desde su panel privado.
+* **Autenticación:** Sistema seguro de Registro, Inicio de Sesión y Cierre de Sesión.
+* **Perfil de Usuario:** Saludo personalizado en la barra de navegación, gestión de avatares (imágenes de perfil) y edición de datos personales.
+* **Seguridad:** Funcionalidad de cambio de contraseña integrada.
 
 ---
 
 ## 🛠️ Tecnologías Utilizadas
-* **Django 5.x:** Framework principal de desarrollo.
-* **SQLite3:** Base de datos para desarrollo (excluida del repositorio según consigna).
-* **Bootstrap 5:** Framework de estilos para una interfaz responsiva y moderna.
-* **Pillow:** Librería para el procesamiento y manejo de imágenes.
+* **Django 5.x:** Framework robusto para el desarrollo backend.
+* **SQLite3:** Motor de base de datos para desarrollo.
+* **Bootstrap 5 & Bootstrap Icons:** Estilos responsivos y modernos.
+* **Pillow:** Procesamiento de imágenes para portadas y perfiles.
 
 ---
 
-## 📋 Requisitos e Instalación
+## 📋 Instalación y Uso
 
-Para ejecutar este proyecto localmente, sigue estos pasos:
+Seguir estos pasos para ejecutar el proyecto en tu entorno local:
 
 1. **Clonar el repositorio:**
    ```bash
-   git clone [https://www.youtube.com/watch?v=44ziZ12rJwU](https://www.youtube.com/watch?v=44ziZ12rJwU)
+   git clone [https://github.com/rubenfolino-hub/proyecto-comision84995_python](https://github.com/rubenfolino-hub/proyecto-comision84995_python)[rubenfolino-hub]/PYTHON_practica_clases.git
    cd PYTHON_practica_clases
-   
+
+
+## Video sobre funcionalidades del sistema:
+https://drive.google.com/file/d/1AyGE4I1sp3TR7dHJwomzJvHlUlmLlEaT/view?usp=drive_link
+

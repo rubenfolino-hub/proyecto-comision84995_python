@@ -12,17 +12,17 @@ class Autor(models.Model):
         return f"{self.apellido}, {self.nombre}"
 
 class Libro(models.Model):
-    # REQUISITOS CUMPLIDOS:
-    titulo = models.CharField(max_length=200) # 1. CharField
-    autor_nombre = models.CharField(max_length=200, verbose_name="Autor") # 2. CharField
+   
+    titulo = models.CharField(max_length=200) 
+    autor_nombre = models.CharField(max_length=200, verbose_name="Autor") 
     
-    # 3. Campo de imagen (Agregado)
+    
     portada = models.ImageField(upload_to='portadas/', null=True, blank=True)
     
-    # 4. Campo de fecha
+    
     fecha_publicacion = models.DateField()
     
-    # 5. Integer con unique=True (Agregado para cumplir la consigna)
+    
     codigo_inventario = models.IntegerField(unique=True, verbose_name="Código de Inventario")
     
     genero = models.CharField(max_length=50)

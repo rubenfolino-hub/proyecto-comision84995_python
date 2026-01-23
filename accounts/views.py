@@ -2,29 +2,29 @@
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User # <--- Agregamos esto
-from django import forms # <--- Agregamos esto
+from django.contrib.auth.models import User
+from django import forms 
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from biblioteca.models import Perfil 
 from biblioteca.forms import UserEditForm, PerfilEditForm 
 
-# --- Definimos el Formulario de Registro con Email (Requisito Profe) ---
+
 class RegistroForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
     class Meta:
         model = User
-        fields = ("username", "email") # La contraseña la maneja UserCreationForm automáticamente
+        fields = ("username", "email")
 
 # --- Vistas ---
 
 def register(request):
     if request.method == 'POST':
-        form = RegistroForm(request.POST) # Ahora sí está definido
+        form = RegistroForm(request.POST) 
         if form.is_valid():
             user = form.save()
-            # Crear perfil automáticamente para el nuevo usuario
+            
             Perfil.objects.create(user=user)
             messages.success(request, f'¡Cuenta creada para {user.username}! Ya puedes iniciar sesión.')
             return redirect('login')
@@ -34,7 +34,7 @@ def register(request):
 
 @login_required
 def ver_perfil(request):
-    # Usamos get_or_create por seguridad si el perfil no se creó en el registro
+    
     perfil_extra, created = Perfil.objects.get_or_create(user=request.user)
     return render(request, 'accounts/perfil.html', {
         'usuario': request.user,

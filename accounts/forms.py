@@ -9,6 +9,6 @@ class RegistroForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ("username", "email", "password") # Aquí aseguras los 3 campos pedidos
+        fields = ("username", "email", "password") 
 
         

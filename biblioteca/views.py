@@ -1,20 +1,17 @@
 
 
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
-
-# Importaciones para las Clases Basadas en Vistas (CBV)
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-# Importamos los modelos y formularios
 from .models import Libro, Autor, Socio 
 from .forms import AutorFormulario, LibroFormulario, SocioFormulario 
 
-# --- Vistas Basadas en Clases (CBV) ---
-
+# --- VISTAS BASADAS EN CLASES ---
 class InicioView(ListView):
     model = Libro
     template_name = 'biblioteca/inicio.html'
@@ -36,9 +33,7 @@ class GestionView(LoginRequiredMixin, ListView):
         context['libros'] = Libro.objects.all()
         return context
 
-# --- Vistas de Detalle (DetailView) ---
-# Usan LoginRequiredMixin: Cumple requisito de Mixin en CBV
-
+# --- DETALLES ---
 class SocioDetalle(LoginRequiredMixin, DetailView):
     model = Socio
     template_name = 'biblioteca/socio_detalle.html'
@@ -54,8 +49,7 @@ class LibroDetalle(LoginRequiredMixin, DetailView):
     template_name = 'biblioteca/libro_detalle.html'
     context_object_name = 'libro'
 
-# --- Vistas Públicas ---
-
+# --- ACERCA DE MÍ ---
 def about(request):
     usuario = {
         "nombre": "Ruben",
@@ -67,27 +61,25 @@ def about(request):
     }
     return render(request, 'about.html', {'usuario': usuario})
 
-# --- Buscador ---
-
-@login_required # Uso de decorador: Cumple requisito en vista común
+# --- BUSCADOR (CORREGIDO) ---
+@login_required 
 def buscar_libro(request):
-    libros = []
     query = request.GET.get('titulo', '')
+    
     if query:
+        # Si hay búsqueda, filtramos
         libros = Libro.objects.filter(
             Q(titulo__icontains=query) | 
             Q(autor_nombre__icontains=query)
         ).distinct()
-        
-        # Mensaje en caso de no encontrar nada (Requisito de la consigna)
-        if not libros:
-            messages.info(request, f"No se encontraron libros que coincidan con: '{query}'")
+    else:
+        # SI NO HAY BÚSQUEDA, mostramos todos los libros cargados
+        libros = Libro.objects.all()
             
     return render(request, 'biblioteca/buscar_libro.html', {'libros': libros, 'query': query})
 
-# --- CRUD Autores ---
-
-@login_required
+# --- GESTIÓN DE AUTORES ---
+@login_required 
 def agregar_autor(request):
     if request.method == "POST":
         form = AutorFormulario(request.POST)
@@ -122,12 +114,11 @@ def borrar_autor(request, id):
     messages.warning(request, "Autor eliminado")
     return redirect('gestion')
 
-# --- CRUD Libros ---
-
+# --- GESTIÓN DE LIBROS ---
 @login_required
 def agregar_libro(request):
     if request.method == "POST":
-        form = LibroFormulario(request.POST, request.FILES) # Agregado FILES por si el libro tiene imagen
+        form = LibroFormulario(request.POST, request.FILES) 
         if form.is_valid():
             form.save()
             messages.success(request, "Libro registrado")
@@ -155,8 +146,7 @@ def borrar_libro(request, id):
     messages.warning(request, "Libro eliminado")
     return redirect('gestion')
 
-# --- CRUD Socios ---
-
+# --- GESTIÓN DE SOCIOS ---
 @login_required
 def agregar_socio(request):
     if request.method == "POST":
@@ -187,4 +177,3 @@ def borrar_socio(request, id):
     Socio.objects.get(id=id).delete()
     messages.warning(request, "Socio dado de baja")
     return redirect('gestion')
-

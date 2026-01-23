@@ -44,7 +44,6 @@ class SocioFormulario(forms.ModelForm):
             'foto': forms.FileInput(attrs={'class': 'form-control'}),
         }
 
-# --- FORMULARIOS PARA EL PERFIL DE USUARIO ---
 
 class UserEditForm(forms.ModelForm):
     class Meta:
